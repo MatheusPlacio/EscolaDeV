@@ -1,4 +1,5 @@
 using EscolaDeV.Context;
+using EscolaDeV.Services;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +15,8 @@ builder.Services.AddSwaggerGen();
 string Connection = builder.Configuration.GetConnectionString("DefaultConnection");
 builder.Services.AddDbContext<DataContext>(options =>
                   options.UseSqlServer(Connection));
+
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 
