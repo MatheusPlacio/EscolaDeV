@@ -22,6 +22,10 @@ namespace EscolaDeV.Services
         }
         public async Task<User> Create(User user)
         {
+            if (!user.Senha.Equals(user.ConfirmarSenha))
+            {
+                throw new Exception("A senha confirmada não confere");
+            }
             User userDb = await _context.Usuarios
                 .AsNoTracking()
                 .SingleOrDefaultAsync(x => x.NomeUsuario == user.NomeUsuario);
@@ -30,7 +34,7 @@ namespace EscolaDeV.Services
             {
                 throw new Exception("Usuário " + user.NomeUsuario + " já existe");
             }
-
+            user.Senha = BCrypt.Net.BCrypt.HashPassword(user.Senha);
             _context.Usuarios.Add(user);
            await _context.SaveChangesAsync();
             return user;
@@ -72,7 +76,10 @@ namespace EscolaDeV.Services
             {
                 throw new Exception("A rota do ID é diferente do ID do usuário");
             }
-
+          else  if (!userIn.Senha.Equals(userIn.ConfirmarSenha))
+            {
+                throw new Exception("A senha confirmada não confere");
+            }
             User userDb = await _context.Usuarios
                 .AsNoTracking()
                .SingleOrDefaultAsync(x => x.Id == id);
@@ -81,6 +88,12 @@ namespace EscolaDeV.Services
             {
                 throw new Exception("Usuário" + id + " não encotrado");
             }
+            else if(!BCrypt.Net.BCrypt.Verify(userIn.SenhaAtual, userDb.Senha))
+            {
+                throw new Exception("Senha atual incorreta");
+            }
+
+            userIn.Senha = BCrypt.Net.BCrypt.HashPassword(userIn.Senha);
             _context.Entry(userIn).State = EntityState.Modified;
             await _context.SaveChangesAsync();
         }

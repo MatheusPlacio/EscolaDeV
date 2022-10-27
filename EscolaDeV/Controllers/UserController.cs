@@ -35,7 +35,7 @@ namespace EscolaDeV.Controllers
 
         [HttpPut("{id}")]
         public async Task<IActionResult> Update([FromBody] User userIn, int id)
-        {
+        {          
             await _service.Update(userIn, id);
             return NoContent();
         }

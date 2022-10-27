@@ -1,4 +1,5 @@
 ﻿using EscolaDeV.Enums;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EscolaDeV.Models
 {
@@ -9,6 +10,12 @@ namespace EscolaDeV.Models
         public int Idade { get; set; }
         public string NomeUsuario { get; set; }
         public string Senha { get; set; }
+
+        [NotMapped]
+        public string ConfirmarSenha { get; set; }
+
+        [NotMapped]
+        public string SenhaAtual { get; set; }
         public TipoUsuario TipoUsuario { get; set; }
 
 
