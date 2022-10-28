@@ -1,5 +1,6 @@
 ﻿using EscolaDeV.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace EscolaDeV.Models
 {
@@ -11,13 +12,17 @@ namespace EscolaDeV.Models
         public string NomeUsuario { get; set; }
         public string Senha { get; set; }
 
-        [NotMapped]
+        
         public string ConfirmarSenha { get; set; }
 
-        [NotMapped]
+        
         public string SenhaAtual { get; set; }
         public TipoUsuario TipoUsuario { get; set; }
-
+        public ICollection<Curso> CursosProfessor { get; set; }
+        [JsonIgnore]
+        public ICollection<Curso> CursoEstudando { get; set; }
+        [JsonIgnore]
+        public List<EstudanteCurso> EstudanteCursos { get; set; }
 
     }
 }
