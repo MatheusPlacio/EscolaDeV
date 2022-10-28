@@ -127,6 +127,7 @@ namespace EscolaDeV.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrimeiroNome")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Senha")

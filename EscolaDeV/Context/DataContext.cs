@@ -20,6 +20,9 @@ namespace EscolaDeV.Context
                    .HasConversion(x => x.ToString(),
                                   x => (TipoUsuario)Enum.Parse(typeof(TipoUsuario), x));
 
+            builder.Entity<User>()
+                .Property(x => x.PrimeiroNome).IsRequired();
+
             builder.Entity<Curso>()
                 .HasOne(x => x.Professor)
                 .WithMany(x => x.CursosProfessor)
@@ -36,10 +39,10 @@ namespace EscolaDeV.Context
             builder.Entity<EstudanteCurso>()
                 .HasOne(x => x.Curso)
                 .WithMany(x => x.EstudanteCursos)
-                .HasForeignKey(x => x.CursoId);    
+                .HasForeignKey(x => x.CursoId);
 
             builder.Entity<EstudanteCurso>()
-                .HasKey(x => new {x.EstudanteId, x.CursoId});
+                .HasKey(x => new { x.EstudanteId, x.CursoId });
         }
     }
 }

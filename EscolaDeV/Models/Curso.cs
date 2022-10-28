@@ -7,13 +7,15 @@ namespace EscolaDeV.Models
     {
         public int ProfessorId { get; set; }
         public string? Nome { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Preco { get; set; }
         public Notas Notas { get; set; }
         public int NotasId { get; set; }
         public virtual  User Professor { get; set; }
         [JsonIgnore]
         public ICollection<User> Estudantes { get; set; }
-        [JsonIgnore]
+         [JsonIgnore]
         public List<EstudanteCurso> EstudanteCursos { get; set; }
     }
 }

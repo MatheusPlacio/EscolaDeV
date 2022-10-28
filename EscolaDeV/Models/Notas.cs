@@ -9,6 +9,8 @@ namespace EscolaDeV.Models
 
         [ForeignKey("Curso")]
         public int CursoId { get; set; }
+
+        [Column(TypeName = "decimal(18,2)")]
         public decimal Valor { get; set; }
         public virtual User Estudante { get; set; }
         public virtual Curso Curso { get; set; }

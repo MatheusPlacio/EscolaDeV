@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace EscolaDeV.Migrations
 {
     [DbContext(typeof(DataContext))]
-    [Migration("20221020230012_ConversaoValor")]
-    partial class ConversaoValor
+    [Migration("20221028203235_EntidadesRelacionamentos")]
+    partial class EntidadesRelacionamentos
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -41,12 +41,35 @@ namespace EscolaDeV.Migrations
                     b.Property<string>("Nome")
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("NotasId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Preco")
                         .HasColumnType("decimal(18,2)");
 
+                    b.Property<int>("ProfessorId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
+                    b.HasIndex("ProfessorId");
+
                     b.ToTable("Cursos");
+                });
+
+            modelBuilder.Entity("EscolaDeV.Models.EstudanteCurso", b =>
+                {
+                    b.Property<int>("EstudanteId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CursoId")
+                        .HasColumnType("int");
+
+                    b.HasKey("EstudanteId", "CursoId");
+
+                    b.HasIndex("CursoId");
+
+                    b.ToTable("EstudanteCurso");
                 });
 
             modelBuilder.Entity("EscolaDeV.Models.Notas", b =>
@@ -57,16 +80,27 @@ namespace EscolaDeV.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<int>("CursoId")
+                        .HasColumnType("int");
+
                     b.Property<DateTime>("DataAlterada")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime>("DataCriada")
                         .HasColumnType("datetime2");
 
+                    b.Property<int>("EstudanteId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Valor")
                         .HasColumnType("decimal(18,2)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CursoId")
+                        .IsUnique();
+
+                    b.HasIndex("EstudanteId");
 
                     b.ToTable("Notas");
                 });
@@ -79,6 +113,9 @@ namespace EscolaDeV.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
+                    b.Property<string>("ConfirmarSenha")
+                        .HasColumnType("nvarchar(max)");
+
                     b.Property<DateTime>("DataAlterada")
                         .HasColumnType("datetime2");
 
@@ -89,7 +126,6 @@ namespace EscolaDeV.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("NomeUsuario")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("PrimeiroNome")
@@ -97,7 +133,9 @@ namespace EscolaDeV.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Senha")
-                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("SenhaAtual")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("TipoUsuario")
@@ -105,12 +143,74 @@ namespace EscolaDeV.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UltimoNome")
-                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
                     b.ToTable("Usuarios");
+                });
+
+            modelBuilder.Entity("EscolaDeV.Models.Curso", b =>
+                {
+                    b.HasOne("EscolaDeV.Models.User", "Professor")
+                        .WithMany("CursosProfessor")
+                        .HasForeignKey("ProfessorId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Professor");
+                });
+
+            modelBuilder.Entity("EscolaDeV.Models.EstudanteCurso", b =>
+                {
+                    b.HasOne("EscolaDeV.Models.Curso", "Curso")
+                        .WithMany("EstudanteCursos")
+                        .HasForeignKey("CursoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EscolaDeV.Models.User", "Estudante")
+                        .WithMany("EstudanteCursos")
+                        .HasForeignKey("EstudanteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Curso");
+
+                    b.Navigation("Estudante");
+                });
+
+            modelBuilder.Entity("EscolaDeV.Models.Notas", b =>
+                {
+                    b.HasOne("EscolaDeV.Models.Curso", "Curso")
+                        .WithOne("Notas")
+                        .HasForeignKey("EscolaDeV.Models.Notas", "CursoId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("EscolaDeV.Models.User", "Estudante")
+                        .WithMany()
+                        .HasForeignKey("EstudanteId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Curso");
+
+                    b.Navigation("Estudante");
+                });
+
+            modelBuilder.Entity("EscolaDeV.Models.Curso", b =>
+                {
+                    b.Navigation("EstudanteCursos");
+
+                    b.Navigation("Notas");
+                });
+
+            modelBuilder.Entity("EscolaDeV.Models.User", b =>
+                {
+                    b.Navigation("CursosProfessor");
+
+                    b.Navigation("EstudanteCursos");
                 });
 #pragma warning restore 612, 618
         }

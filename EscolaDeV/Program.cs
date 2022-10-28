@@ -17,7 +17,7 @@ string Connection = builder.Configuration.GetConnectionString("DefaultConnection
 builder.Services.AddDbContext<DataContext>(options =>
                   options.UseSqlServer(Connection));
 
-builder.Services.AddControllers()
+ builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddScoped<IUserService, UserService>();
