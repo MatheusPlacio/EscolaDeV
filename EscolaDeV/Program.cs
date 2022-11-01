@@ -1,4 +1,6 @@
+using AutoMapper;
 using EscolaDeV.Context;
+using EscolaDeV.Profiles;
 using EscolaDeV.Services;
 using Microsoft.EntityFrameworkCore;
 using System.Text.Json.Serialization;
@@ -17,12 +19,19 @@ string Connection = builder.Configuration.GetConnectionString("DefaultConnection
 builder.Services.AddDbContext<DataContext>(options =>
                   options.UseSqlServer(Connection));
 
+builder.Services.Configure<AppSettings>(builder.Configuration.GetSection("AppSettings"));
+
  builder.Services.AddControllers()
     .AddJsonOptions(options => options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);
 
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICursoService, CursoService>();
 builder.Services.AddScoped<INotasService, NotasService>();
+builder.Services.AddScoped<IJwtService, IJwtService>();
+
+var mapperConfig = MapperConfig.GetMapperConfig();
+IMapper mapper = mapperConfig.CreateMapper();
+builder.Services.AddSingleton(mapper);
 
 var app = builder.Build();
 

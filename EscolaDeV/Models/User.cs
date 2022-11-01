@@ -10,12 +10,8 @@ namespace EscolaDeV.Models
         public string UltimoNome { get; set; }
         public int Idade { get; set; }
         public string NomeUsuario { get; set; }
-        public string Senha { get; set; }
-
-        
-        public string ConfirmarSenha { get; set; }
-
-        
+        public string Senha { get; set; }      
+        public string ConfirmarSenha { get; set; }       
         public string SenhaAtual { get; set; }
         public TipoUsuario TipoUsuario { get; set; }
         public ICollection<Curso> CursosProfessor { get; set; }
